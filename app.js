@@ -1,30 +1,37 @@
+
+function isValidDecimal(number) {
+    return !isNaN(number) && number.trim() !== '';
+}
+
 document.getElementById('calculateButton').addEventListener('click', function() {
-    const number1 = document.getElementById('number1').value;
-    const number2 = document.getElementById('number2').value;
-    const operation = document.querySelector('input[name="operation"]:checked').value;
+    const number1 = document.getElementById('number1').value.trim();
+    const number2 = document.getElementById('number2').value.trim();
+    const operation = document.querySelector('input[name="operation"]:checked');
     const resultField = document.getElementById('result');
     const messageField = document.getElementById('message');
-    
-    let result;
-    
-    // Clear previous messages
+
     messageField.textContent = '';
-    
-    // Validate inputs
-    if (isNaN(number1)) {
-        messageField.textContent = 'Giá trị nhập ở ô Số thứ nhất không phải là số';
+    resultField.value = '';
+
+    if (!isValidDecimal(number1)) {
+        messageField.textContent = 'Giá trị nhập ở ô Số thứ nhất không phải là số hợp lệ.';
         return;
     }
-    if (isNaN(number2)) {
-        messageField.textContent = 'Giá trị nhập ở ô Số thứ hai không phải là số';
+    if (!isValidDecimal(number2)) {
+        messageField.textContent = 'Giá trị nhập ở ô Số thứ hai không phải là số hợp lệ.';
         return;
     }
 
     const num1 = parseFloat(number1);
     const num2 = parseFloat(number2);
-    
-    // Perform calculation
-    switch (operation) {
+
+    if (!operation) {
+        messageField.textContent = 'Vui lòng chọn một phép tính.';
+        return;
+    }
+
+    let result;
+    switch (operation.value) {
         case 'add':
             result = num1 + num2;
             break;
@@ -36,12 +43,31 @@ document.getElementById('calculateButton').addEventListener('click', function() 
             break;
         case 'divide':
             if (num2 === 0) {
-                messageField.textContent = 'Không thể chia cho 0';
+                messageField.textContent = 'Không thể chia cho 0.';
                 return;
             }
             result = num1 / num2;
             break;
     }
-    
     resultField.value = result;
+});
+
+document.getElementById('number1').addEventListener('blur', function() {
+    const messageField = document.getElementById('message');
+    const number1 = this.value.trim();
+    if (!isValidDecimal(number1)) {
+        messageField.textContent = 'Giá trị nhập ở ô Số thứ nhất không phải là số hợp lệ.';
+    } else {
+        messageField.textContent = ''; 
+    }
+});
+
+document.getElementById('number2').addEventListener('blur', function() {
+    const messageField = document.getElementById('message');
+    const number2 = this.value.trim();
+    if (!isValidDecimal(number2)) {
+        messageField.textContent = 'Giá trị nhập ở ô Số thứ hai không phải là số hợp lệ.';
+    } else {
+        messageField.textContent = ''; 
+    }
 });
